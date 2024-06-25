@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Number Generator</title>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .input-item {
+            flex: 1 1 200px;
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #34495e;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 20px auto;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+        .info-button {
+            background-color: #FFD700;
+            color: #2c3e50;
+            border: none;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 50%;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700; }
+            50% { box-shadow: 0 0 15px #FFD700, 0 0 25px #FFD700, 0 0 35px #FFD700; }
+            100% { box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700; }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔮 Magical Number Generator</h1>
+        <button class="info-button" onclick="openModal()">i</button>
+        
+        <form id="number-generator-form">
+            <p>Generate numbers based on different inputs. All fields are optional.</p>
+            
+            <div class="input-group">
+                <div class="input-item">
+                    <label for="maxRange1">Max Range (A-E):</label>
+                    <input type="number" id="maxRange1" name="maxRange1" value="100">
+                </div>
+                <div class="input-item">
+                    <label for="inputA">Mystic A:</label>
+                    <input type="number" id="inputA" name="inputA" value="0">
+                </div>
+                <div class="input-item">
+                    <label for="inputB">Enigma B:</label>
+                    <input type="number" id="inputB" name="inputB" value="0">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <div class="input-item">
+                    <label for="inputC">Cipher C:</label>
+                    <input type="number" id="inputC" name="inputC" value="0">
+                </div>
+                <div class="input-item">
+                    <label for="inputD">Riddle D:</label>
+                    <input type="number" id="inputD" name="inputD" value="0">
+                </div>
+                <div class="input-item">
+                    <label for="inputE">Enigma E:</label>
+                    <input type="number" id="inputE" name="inputE" value="0">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <div class="input-item">
+                    <label for="inputF">Golden F (optional):</label>
+                    <input type="number" id="inputF" name="inputF" value="0">
+                </div>
+                <div class="input-item">
+                    <label for="maxRange2">Golden Limit F (optional):</label>
+                    <input type="number" id="maxRange2" name="maxRange2" value="100">
+                </div>
+            </div>
+            
+            <button type="button" py-click="generate_numbers()">🚀 Generate Magical Numbers</button>
+        </form>
+        
+        <div id="result"></div>
+    </div>
+    
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>About the Magical Number Generator</h2>
+            <h3>Formulas and Properties:</h3>
+            <ul>
+                <li><strong>A (Golden Ratio):</strong> Uses the Golden Ratio (φ) = (1 + √5) / 2 ≈ 1.618033988749895
+                    <br>Formula: ((input + 1) * φ) % max_range
+                    <br>Property: Generates numbers with aesthetic and natural proportions.</li>
+                <li><strong>B (Custom):</strong> Custom calculation
+                    <br>Formula: (input * 2 + 1) % max_range
+                    <br>Property: Creates a simple linear pattern with odd numbers.</li>
+                <li><strong>C (Fibonacci):</strong> Uses the Fibonacci sequence where F(n) = F(n-1) + F(n-2), F(0) = 0, F(1) = 1
+                    <br>Formula: fibonacci(input) % max_range
+                    <br>Property: Generates numbers following the famous Fibonacci pattern.</li>
+                <li><strong>D (Custom):</strong> Another custom calculation
+                    <br>Formula: (input * 3 - 1) % max_range
+                    <br>Property: Creates a linear pattern with a different slope than B.</li>
+                <li><strong>E (Custom):</strong> Yet another custom calculation
+                    <br>Formula: (input * 5 + 2) % max_range
+                    <br>Property: Provides another linear pattern with a steeper slope.</li>
+                <li><strong>F (Optional Golden):</strong> Uses the Golden Ratio like A, but with a separate max range
+                    <br>Formula: ((input + 1) * φ) % max_range_f
+                    <br>Property: Allows for a separate golden ratio calculation with its own limit.</li>
+            </ul>
+            <h3>Potential Uses:</h3>
+            <ul>
+                <li>Generating pseudo-random numbers for games or simulations</li>
+                <li>Creating unique identifiers or hash-like values</li>
+                <li>Exploring mathematical patterns and relationships</li>
+                <li>Educational tool for number theory and sequences</li>
+                <li>Generating artistic or design-related number sequences</li>
+                <li>Creating custom number wheels for lottery-style games</li>
+            </ul>
+            <p>This generator can be used for various number games, including daily 3-ball, 4-ball, or 5-ball games. The different formulas provide a mix of well-known mathematical sequences and custom patterns, offering a wide range of number generation possibilities.</p>
+        </div>
+    </div>
+    
+    <script type="py" src="./main.py"></script>
+    
+    <script>
+        function openModal() {
+            document.getElementById("infoModal").style.display = "block";
+        }
+        
+        function closeModal() {
+            document.getElementById("infoModal").style.display = "none";
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("infoModal")) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
